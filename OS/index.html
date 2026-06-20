@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SPOS</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&display=swap" rel="stylesheet">
+</head>
+
+<body style="
+margin:0;
+background-image:url('/OS/batman.png');
+background-size:cover;
+background-position:center;
+background-repeat:no-repeat;
+height:100vh;
+overflow:hidden;
+font-family:'Oswald', sans-serif;
+">
+
+<div style="
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:48px;
+background:rgba(13,15,17,0.65);
+backdrop-filter:blur(8px);
+display:flex;
+align-items:center;
+padding:0 20px;
+box-sizing:border-box;
+color:white;
+gap:10px;
+z-index:100;
+">
+
+<div id="welcomeopen" style="background:black;padding:4px 12px;border-radius:20px;cursor:pointer;">SPOS</div>
+<div id="aboutopen" style="background:black;padding:4px 12px;border-radius:20px;cursor:pointer;">Batcave</div>
+<div id="todoopen" style="background:black;padding:4px 12px;border-radius:20px;cursor:pointer;">Todo</div>
+<div id="weatheropen" style="background:black;padding:4px 12px;border-radius:20px;cursor:pointer;">Weather</div>
+
+<div style="
+position:absolute;
+left:50%;
+transform:translateX(-50%);
+background:black;
+padding:4px 16px;
+border-radius:20px;
+">
+The Vengeance
+</div>
+
+<div id="timeElement" style="
+margin-left:auto;
+background:black;
+padding:4px 12px;
+border-radius:20px;
+">
+</div>
+
+</div>
+
+<div id="welcome" class="window" style="top:150px;left:150px;">
+<div id="welcomeheader" class="header">
+<div id="welcomeclose" class="closebtn"></div>
+</div>
+
+<img src="/OS/bat.webp" width="42" height="42" style="border-radius:50%;">
+
+<h1 style="color:white;">SPOS</h1>
+<p style="color:white;">Yoo guys! SP here.<br>Welcome to my Batman-themed operating system.</p>
+</div>
+
+<div id="about" class="window" style="top:220px;left:350px;display:none;">
+<div id="aboutheader" class="header">
+<div id="aboutclose" class="closebtn"></div>
+</div>
+
+<h1 style="color:white;">Batcave</h1>
+<p style="color:white;">"I am vengeance!<br>I am the night!<br>I am... Batman!"</p>
+</div>
+
+<div id="todo" class="window" style="top:300px;left:600px;display:none;">
+<div id="todoheader" class="header">
+<div id="todoclose" class="closebtn"></div>
+</div>
+
+<h1 style="color:white;">Todo</h1>
+
+<input id="taskInput" type="text" placeholder="New task..." style="
+width:70%;
+padding:8px;
+border:none;
+outline:none;
+background:#111;
+color:white;
+border:1px solid white;
+font-family:'Oswald', sans-serif;
+">
+
+<button onclick="addTask()" style="
+padding:8px;
+background:white;
+color:black;
+border:none;
+cursor:pointer;
+font-family:'Oswald', sans-serif;
+">
+Add
+</button>
+
+<ul id="taskList" style="
+color:white;
+padding-left:20px;
+margin-top:15px;
+"></ul>
+</div>
+
+<div id="weather" class="window" style="top:250px;left:850px;display:none;">
+<div id="weatherheader" class="header">
+<div id="weatherclose" class="closebtn"></div>
+</div>
+
+<h1 style="color:white;">Weather</h1>
+
+<input id="cityInput" type="text" placeholder="Enter city..." style="
+width:70%;
+padding:8px;
+border:none;
+outline:none;
+background:#111;
+color:white;
+border:1px solid white;
+font-family:'Oswald', sans-serif;
+">
+
+<button onclick="getWeather()" style="
+padding:8px;
+background:white;
+color:black;
+border:none;
+cursor:pointer;
+font-family:'Oswald', sans-serif;
+">
+Check
+</button>
+
+<div id="weatherResult" style="
+margin-top:15px;
+color:white;
+line-height:1.5;
+"></div>
+</div>
+
+<script>
+function updateTime() {
+  var now = new Date();
+
+  var date = now.toLocaleDateString("en-IN");
+  var time = now.toLocaleTimeString("en-IN", {
+    hour: "2-digit",
+    minute: "2-digit"
+  });
+
+  document.getElementById("timeElement").innerHTML = date + " " + time;
+}
+updateTime();
+setInterval(updateTime, 1000);
+
+function styleWindows() {
+  let windows = document.querySelectorAll(".window");
+  windows.forEach(win => {
+    win.style.position = "absolute";
+    win.style.width = "320px";
+    win.style.background = "black";
+    win.style.border = "2px solid white";
+    win.style.borderRadius = "15px";
+    win.style.padding = "14px";
+    win.style.boxShadow = "0 0 20px rgba(255,255,255,0.15)";
+  });
+
+  let headers = document.querySelectorAll(".header");
+  headers.forEach(header => {
+    header.style.display = "flex";
+    header.style.cursor = "grab";
+    header.style.marginBottom = "10px";
+  });
+
+  let buttons = document.querySelectorAll(".closebtn");
+  buttons.forEach(btn => {
+    btn.style.width = "14px";
+    btn.style.height = "14px";
+    btn.style.background = "white";
+    btn.style.cursor = "pointer";
+  });
+}
+styleWindows();
+
+function openWindow(id) {
+  document.getElementById(id).style.display = "block";
+}
+
+function closeWindow(id) {
+  document.getElementById(id).style.display = "none";
+}
+
+["welcome","about","todo","weather"].forEach(id => {
+  document.getElementById(id + "open").onclick = () => openWindow(id);
+  document.getElementById(id + "close").onclick = () => closeWindow(id);
+  dragElement(document.getElementById(id));
+});
+
+function dragElement(element) {
+  let pos1=0,pos2=0,pos3=0,pos4=0;
+  document.getElementById(element.id + "header").onmousedown = dragMouseDown;
+
+  function dragMouseDown(e) {
+    e.preventDefault();
+    pos3=e.clientX;
+    pos4=e.clientY;
+    document.onmouseup=stopDragging;
+    document.onmousemove=elementDrag;
+  }
+
+  function elementDrag(e) {
+    e.preventDefault();
+    pos1=pos3-e.clientX;
+    pos2=pos4-e.clientY;
+    pos3=e.clientX;
+    pos4=e.clientY;
+    element.style.top=(element.offsetTop-pos2)+"px";
+    element.style.left=(element.offsetLeft-pos1)+"px";
+  }
+
+  function stopDragging() {
+    document.onmouseup=null;
+    document.onmousemove=null;
+  }
+}
+
+function addTask() {
+  var input = document.getElementById("taskInput");
+  var task = input.value.trim();
+
+  if(task === "") return;
+
+  var li = document.createElement("li");
+  li.textContent = task;
+  li.style.cursor = "pointer";
+
+  li.onclick = function() {
+    li.style.textDecoration = "line-through";
+    li.style.opacity = "0.6";
+  };
+
+  document.getElementById("taskList").appendChild(li);
+  input.value = "";
+}
+
+async function getWeather() {
+  var city = document.getElementById("cityInput").value.trim();
+  if(city === "") return;
+
+  var result = document.getElementById("weatherResult");
+  result.innerHTML = "Loading...";
+
+  try {
+    const response = await fetch("https://wttr.in/" + city + "?format=j1");
+    const data = await response.json();
+
+    var current = data.current_condition[0];
+
+    result.innerHTML =
+      "City: " + city + "<br>" +
+      "Temp: " + current.temp_C + "°C<br>" +
+      "Condition: " + current.weatherDesc[0].value + "<br>" +
+      "Humidity: " + current.humidity + "%<br>" +
+      "Wind: " + current.windspeedKmph + " km/h";
+  } catch {
+    result.innerHTML = "Could not fetch weather.";
+  }
+}
+</script>
+
+</body>
+</html>
