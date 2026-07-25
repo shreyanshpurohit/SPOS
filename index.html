@@ -8,11 +8,112 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+@keyframes fadeInUp {
+  0%   { opacity: 0; transform: translateY(12px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+@keyframes barFill {
+  0%   { width: 0%; }
+  100% { width: 100%; }
+}
+@keyframes blinkCursor {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0; }
+}
+#loginScreen.fadeOut {
+  opacity: 0 !important;
+  pointer-events: none;
+}
+
+@keyframes skyDrift {
+  0%   { background-position: 0 0, 0 0; }
+  100% { background-position: -400px 0, 300px 0; }
+}
+.beam {
+  position: absolute;
+  bottom: -20px;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-left: 260px solid transparent;
+  border-right: 260px solid transparent;
+  border-bottom: 720px solid rgba(255,255,255,0.10);
+  transform-origin: bottom center;
+  transform: translateX(-50%) rotate(-35deg);
+  transition: transform 0.7s cubic-bezier(.4,0,.2,1), border-bottom-color 0.6s ease;
+  filter: blur(2px);
+}
+.beam.locked {
+  border-bottom-color: rgba(255,255,255,0.16);
+}
+.batEmblem {
+  position: absolute;
+  top: 14%;
+  left: 50%;
+  transform: translateX(-50%) scale(0.7);
+  opacity: 0;
+  transition: opacity 1s ease, transform 1s ease;
+  z-index: 2;
+}
+.batEmblem.show {
+  opacity: 1;
+  transform: translateX(-50%) scale(1);
+}
+.batEmblem img {
+  width: 130px;
+  display: block;
+  filter: drop-shadow(0 0 18px rgba(255,255,255,0.85));
+}
+.lightning {
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: white;
+  opacity: 0;
+  pointer-events: none;
+}
+.lightning.flash {
+  animation: flashPulse 0.5s ease;
+}
+@keyframes flashPulse {
+  0%   { opacity: 0; }
+  8%   { opacity: 0.55; }
+  16%  { opacity: 0.05; }
+  22%  { opacity: 0.4; }
+  35%  { opacity: 0; }
+  100% { opacity: 0; }
+}
+.batFly {
+  position: absolute;
+  top: var(--y, 20%);
+  left: -60px;
+  width: 34px;
+  opacity: 0.55;
+  animation: flyAcross var(--dur, 9s) linear infinite;
+  animation-delay: var(--delay, 0s);
+}
+.batFly svg {
+  width: 100%;
+  display: block;
+  animation: flap 0.35s ease-in-out infinite alternate;
+  fill: #0d0d0f;
+}
+@keyframes flyAcross {
+  0%   { left: -60px; transform: translateY(0); }
+  50%  { transform: translateY(-40px); }
+  100% { left: 110%; transform: translateY(10px); }
+}
+@keyframes flap {
+  0%   { transform: scaleY(1); }
+  100% { transform: scaleY(0.45); }
+}
+</style>
 </head>
 
 <body style="
 margin:0;
-background-image:url('/batman.png');
+background-image:url('batman.png');
 background-size:cover;
 background-position:center;
 background-repeat:no-repeat;
@@ -20,6 +121,135 @@ height:100vh;
 overflow:hidden;
 font-family:'Oswald', sans-serif;
 ">
+
+<div id="loginScreen" style="
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+z-index:1000;
+overflow:hidden;
+transition:opacity 0.8s ease;
+background:
+  radial-gradient(ellipse at 50% 120%, rgba(40,50,70,0.5), transparent 60%),
+  linear-gradient(180deg, #050608 0%, #0a0e16 40%, #10131c 100%);
+">
+
+<div style="
+position:absolute;
+top:0;left:0;width:160%;height:100%;
+background-image:
+  radial-gradient(ellipse 300px 80px at 20% 30%, rgba(255,255,255,0.05), transparent 70%),
+  radial-gradient(ellipse 400px 100px at 70% 18%, rgba(255,255,255,0.04), transparent 70%);
+animation: skyDrift 30s linear infinite alternate;
+"></div>
+
+<div class="batFly" style="--y:22%; --dur:7.5s; --delay:0.3s;">
+<svg viewBox="0 0 200 90"><g>
+<polygon points="85,8 97,30 73,30"/>
+<polygon points="115,8 127,32 103,30"/>
+<ellipse cx="100" cy="42" rx="14" ry="12"/>
+<path d="M86,40 L15,10 L42,46 L8,72 L48,55 L86,58 Z"/>
+<path d="M114,40 L185,10 L158,46 L192,72 L152,55 L114,58 Z"/>
+</g></svg>
+</div>
+<div class="batFly" style="--y:12%; --dur:9s; --delay:2.4s;">
+<svg viewBox="0 0 200 90"><g>
+<polygon points="85,8 97,30 73,30"/>
+<polygon points="115,8 127,32 103,30"/>
+<ellipse cx="100" cy="42" rx="14" ry="12"/>
+<path d="M86,40 L15,10 L42,46 L8,72 L48,55 L86,58 Z"/>
+<path d="M114,40 L185,10 L158,46 L192,72 L152,55 L114,58 Z"/>
+</g></svg>
+</div>
+<div class="batFly" style="--y:30%; --dur:6.2s; --delay:4.1s;">
+<svg viewBox="0 0 200 90"><g>
+<polygon points="85,8 97,30 73,30"/>
+<polygon points="115,8 127,32 103,30"/>
+<ellipse cx="100" cy="42" rx="14" ry="12"/>
+<path d="M86,40 L15,10 L42,46 L8,72 L48,55 L86,58 Z"/>
+<path d="M114,40 L185,10 L158,46 L192,72 L152,55 L114,58 Z"/>
+</g></svg>
+</div>
+
+<div style="
+position:absolute;
+bottom:0;left:0;width:100%;height:120px;
+background:#000;
+clip-path:polygon(
+  0% 100%, 0% 60%, 4% 60%, 4% 40%, 9% 40%, 9% 65%, 15% 65%, 15% 30%, 17% 30%, 17% 15%, 19% 15%, 19% 30%, 24% 30%, 24% 55%,
+  30% 55%, 30% 45%, 35% 45%, 35% 20%, 37% 20%, 37% 45%, 43% 45%, 43% 60%, 49% 60%, 49% 25%, 51% 25%, 51% 10%, 53% 10%, 53% 25%, 55% 25%, 55% 60%,
+  61% 60%, 61% 35%, 66% 35%, 66% 50%, 71% 50%, 71% 20%, 76% 20%, 76% 45%, 82% 45%, 82% 55%, 87% 55%, 87% 30%, 91% 30%, 91% 60%, 96% 60%, 96% 40%, 100% 40%, 100% 100%
+);
+z-index:1;
+"></div>
+
+<div class="beam" id="beam"></div>
+
+<div class="batEmblem" id="batEmblem">
+<img src="batsignal.png" alt="Bat signal">
+</div>
+
+<div class="lightning" id="lightning"></div>
+
+<div style="
+position:relative;
+z-index:3;
+height:100%;
+display:flex;
+align-items:center;
+justify-content:center;
+flex-direction:column;
+">
+
+<h1 id="loginTitle" style="
+color:white;
+letter-spacing:6px;
+margin:190px 0 6px 0;
+"></h1>
+
+<div id="loginSubtitle" style="
+color:#aaa;
+font-size:13px;
+letter-spacing:2px;
+margin-bottom:20px;
+opacity:0;
+">INITIALIZING SYSTEM</div>
+
+<div style="
+width:260px;
+height:4px;
+background:#222;
+border:1px solid white;
+overflow:hidden;
+">
+<div id="loginBar" style="
+height:100%;
+width:0%;
+background:white;
+animation: barFill 2s ease-in-out forwards;
+animation-delay:4.4s;
+"></div>
+</div>
+
+<button id="enterBtn" style="
+margin-top:26px;
+padding:10px 24px;
+background:white;
+color:black;
+border:none;
+cursor:pointer;
+font-family:'Oswald', sans-serif;
+letter-spacing:2px;
+opacity:0;
+pointer-events:none;
+transition:opacity 0.5s ease;
+">ENTER THE BATCAVE</button>
+
+</div>
+
+</div>
 
 <div style="
 position:fixed;
@@ -42,6 +272,9 @@ z-index:100;
 <div id="aboutopen" style="background:black;padding:4px 12px;border-radius:20px;cursor:pointer;">Batcave</div>
 <div id="todoopen" style="background:black;padding:4px 12px;border-radius:20px;cursor:pointer;">Todo</div>
 <div id="weatheropen" style="background:black;padding:4px 12px;border-radius:20px;cursor:pointer;">Weather</div>
+<div id="calcopen" style="background:black;padding:4px 12px;border-radius:20px;cursor:pointer;">Calculator</div>
+<div id="notesopen" style="background:black;padding:4px 12px;border-radius:20px;cursor:pointer;">Notes</div>
+<div id="gadgetsopen" style="background:black;padding:4px 12px;border-radius:20px;cursor:pointer;">Gadgets</div>
 
 <div style="
 position:absolute;
@@ -69,7 +302,7 @@ border-radius:20px;
 <div id="welcomeclose" class="closebtn"></div>
 </div>
 
-<img src="/bat.webp" width="42" height="42" style="border-radius:50%;">
+<img src="bat.webp" width="42" height="42" style="border-radius:50%;">
 
 <h1 style="color:white;">SPOS</h1>
 <p style="color:white;">Yoo guys! SP here.<br>Welcome to my Batman-themed operating system.</p>
@@ -156,6 +389,70 @@ line-height:1.5;
 "></div>
 </div>
 
+<div id="calc" class="window" style="top:180px;left:450px;display:none;">
+<div id="calcheader" class="header">
+<div id="calcclose" class="closebtn"></div>
+</div>
+
+<h1 style="color:white;">Calculator</h1>
+
+<input id="calcScreen" type="text" readonly style="
+width:100%;
+box-sizing:border-box;
+padding:10px;
+margin-bottom:10px;
+background:#111;
+color:white;
+border:1px solid white;
+font-family:'Oswald', sans-serif;
+font-size:18px;
+text-align:right;
+">
+
+<div style="
+display:grid;
+grid-template-columns:repeat(4, 1fr);
+gap:6px;
+">
+</div>
+</div>
+
+<div id="notes" class="window" style="top:320px;left:200px;display:none;">
+<div id="notesheader" class="header">
+<div id="notesclose" class="closebtn"></div>
+</div>
+
+<h1 style="color:white;">Notes</h1>
+
+<textarea id="notesArea" placeholder="Jot something down..." style="
+width:100%;
+height:150px;
+box-sizing:border-box;
+padding:8px;
+background:#111;
+color:white;
+border:1px solid white;
+font-family:'Oswald', sans-serif;
+resize:none;
+outline:none;
+"></textarea>
+</div>
+
+<div id="gadgets" class="window" style="top:260px;left:700px;display:none;">
+<div id="gadgetsheader" class="header">
+<div id="gadgetsclose" class="closebtn"></div>
+</div>
+
+<h1 style="color:white;">Gadgets</h1>
+<ul style="color:white;padding-left:20px;line-height:1.6;">
+<li>Batarang</li>
+<li>Grapple Gun</li>
+<li>Smoke Pellets</li>
+<li>Batmobile</li>
+<li>Utility Belt</li>
+</ul>
+</div>
+
 <script>
 function updateTime() {
   var now = new Date();
@@ -208,7 +505,7 @@ function closeWindow(id) {
   document.getElementById(id).style.display = "none";
 }
 
-["welcome","about","todo","weather"].forEach(id => {
+["welcome","about","todo","weather","calc","notes","gadgets"].forEach(id => {
   document.getElementById(id + "open").onclick = () => openWindow(id);
   document.getElementById(id + "close").onclick = () => closeWindow(id);
   dragElement(document.getElementById(id));
@@ -284,6 +581,108 @@ async function getWeather() {
     result.innerHTML = "Could not fetch weather.";
   }
 }
+
+(function loginSequence() {
+  var title = document.getElementById("loginTitle");
+  var subtitle = document.getElementById("loginSubtitle");
+  var enterBtn = document.getElementById("enterBtn");
+  var loginScreen = document.getElementById("loginScreen");
+  var beam = document.getElementById("beam");
+  var emblem = document.getElementById("batEmblem");
+  var lightning = document.getElementById("lightning");
+  var text = "SPOS";
+  var i = 0;
+
+  var sweep = [-35, 25, -15, 10, 0];
+  sweep.forEach(function(deg, idx) {
+    setTimeout(function() {
+      beam.style.transform = "translateX(-50%) rotate(" + deg + "deg)";
+      if (idx === sweep.length - 1) {
+        beam.classList.add("locked");
+      }
+    }, idx * 650);
+  });
+
+  var lockTime = sweep.length * 650;
+  setTimeout(function() {
+    lightning.classList.add("flash");
+    emblem.classList.add("show");
+  }, lockTime + 150);
+
+  function typeLetter() {
+    if (i < text.length) {
+      title.textContent += text[i];
+      i++;
+      setTimeout(typeLetter, 180);
+    } else {
+      title.innerHTML += '<span style="animation: blinkCursor 1s step-end infinite;">_</span>';
+      subtitle.style.animation = "fadeInUp 0.6s ease forwards";
+    }
+  }
+  setTimeout(typeLetter, lockTime + 900);
+
+  setTimeout(function() {
+    enterBtn.style.opacity = "1";
+    enterBtn.style.pointerEvents = "auto";
+  }, lockTime + 3300);
+
+  function enterOS() {
+    loginScreen.classList.add("fadeOut");
+    setTimeout(function() {
+      loginScreen.style.display = "none";
+    }, 800);
+  }
+
+  enterBtn.onclick = enterOS;
+
+  document.addEventListener("keydown", function(e) {
+    if (e.key === "Enter" && enterBtn.style.opacity === "1") {
+      enterOS();
+    }
+  });
+})();
+
+(function buildCalculator() {
+  var grid = document.querySelector("#calc > div:last-child");
+  var screen = document.getElementById("calcScreen");
+  var current = "";
+
+  var buttons = ["7","8","9","/","4","5","6","*","1","2","3","-","0",".","C","+","="];
+
+  buttons.forEach(function(label) {
+    var btn = document.createElement("button");
+    btn.textContent = label;
+    btn.style.padding = "12px";
+    btn.style.background = "white";
+    btn.style.color = "black";
+    btn.style.border = "none";
+    btn.style.cursor = "pointer";
+    btn.style.fontFamily = "'Oswald', sans-serif";
+    btn.style.fontSize = "16px";
+    if (label === "=") {
+      btn.style.gridColumn = "span 2";
+      btn.style.background = "#e63946";
+      btn.style.color = "white";
+    }
+
+    btn.onclick = function() {
+      if (label === "C") {
+        current = "";
+      } else if (label === "=") {
+        try {
+          current = String(Function('"use strict"; return (' + current + ')')());
+        } catch {
+          current = "Error";
+        }
+      } else {
+        current += label;
+      }
+      screen.value = current;
+    };
+
+    grid.appendChild(btn);
+  });
+})();
 </script>
 
 </body>
